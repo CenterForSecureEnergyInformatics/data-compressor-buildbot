@@ -1,0 +1,10 @@
+version: '3'
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: armv8_dockerfile
+    restart: unless-stopped
+    env_file:
+      - ../buildmaster.env
+      - ./armv8.env

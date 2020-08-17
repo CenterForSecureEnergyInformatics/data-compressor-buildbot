@@ -21,10 +21,10 @@ if [[ $kernel == MINGW64* ]]; then
         python sandbox/Scripts/pywin32_postinstall.py -install
         #
         buildbot-worker create-worker . "${BUILDMASTER:?}" "${WINDOWS_NAME:?}" "${WINDOWS_PASS:?}"
-        echo "the only thing left for you to do is: get nssm and create a service using buildbot-worker-start.cmd"
+        echo "the only thing left for you to do is: get nssm and create a service which calls buildbot-worker-start.cmd"
         echo "note: in the gui, specify the local user + password"
-        echo "note: after installation, the service does not run. you have to start it manually."
-        echo "note: it should, however, start at boot."
+        echo "note: after installation, the service does not run. You have to enable and start start it manually."
+        echo "note: once enabled, the service starts automatically on reboot"
     else
         echo "you need to run this terminal as administrator"
         exit 1

@@ -3,13 +3,13 @@ This project contains dockerized services, serving a buildbot buildmaster to the
 It is intended to be used on a linux server.
 Currently, it runs under Debian Buster.
 ## Setup
-- clone this repository to your server. 
-- install docker and docker-compose.
-- create a dedicated, unprivileged user for this project
-- add the user to the docker group
-- clone this repository to your server. You only need the folder containing this README.
-  - optional: create a branch for your secrets (git checkout -b secrets)
-- follow the setup instructions in the subfolders. Start with traefik and then buildbot.
+1. clone this repository to your server. 
+2. install docker and docker-compose.
+3. create a dedicated, unprivileged user for this project
+4. add the user to the docker group
+5. clone this repository to your server. You only need the folder containing this README.
+   - optional: create a branch for your secrets (git checkout -b secrets)
+6. follow the setup instructions in the subfolders. Start with traefik and then buildbot.
 
 This project comes mostly preconfigured.
 

@@ -37,7 +37,7 @@ The workers are connected via port 9989 to the buildmaster.
 Workers on different platforms are implemented in this setup:
 - windows 10. Unfortunately, tls seems not to work on windows with buildbot, so the vm running the buildmaster has to share a subnet with the windows-vm (which it does in our setup).
 - Raspberri Pi (1, 2b and 3b+), dockerized. They use a tls connection handled by the reverse proxy traefik.
-- Linux, dockerized. See multiarch_dockerfile and docker-compose.yml for the definition. Runs on the same host as the buildmaster.
+- Linux, dockerized. See multiarch_dockerfile and docker-compose.yml for the definition. It runs on the same host as the buildmaster.
 
 Buildfactories define which steps are to be executed on a build.
 For each platform/architecture a scheduler is defined in this configuration.
@@ -50,7 +50,7 @@ For a detailed overview, please refer to http://docs.buildbot.net/latest/manual/
 ## Setup / Configuration
 The file master.cfg is the main configuration file of buildbot, docker-compose.yml handles all services involved.
 ### master.cfg
-Everything is pre-configured in this setup and does not require much changes.
+Everything is pre-configured in this setup and does not require many changes.
 Please refer to http://docs.buildbot.net/latest/manual/configuration/ for details, as a detailed explanation is beyond the scope of this README.
 #### Credentials for the Web Ui
 To force builds, you need to be logged in.
@@ -71,14 +71,14 @@ Make sure to set these passwords on the corresponding workers as well!
 On the workers, the files are located in the same folders and files to make this step easier.
 
 #### GitHubPullRequestPoller
-Important Note: for the GithubPullrequestPoller to work, the owner and repository name (NOT the URL) has to be provided.
-In this configuration, the following is used:
+Important Note: for the GithubPullrequestPoller to work, the owner and repository name (NOT the URL) have to be provided.
+In this configuration, the following are used:
 - compressorRepoName = 'data-compressor'
 - compressorRepoOwner = 'CenterForSecureEnergyInformatics'
 
 ### docker-compose.yml
 The following services are specified here:
-- buildbot-buildmaster
+- buildbot-buildmaster: the buildmaster and the webinterface itself
 - db: a database for the buildmaster
 - worker: a buildbot worker running linux (used to crosscompile), defined in multiarch_dockerfile
 

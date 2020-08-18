@@ -41,6 +41,6 @@ if [[ $kernel == MINGW64* ]]; then
         exit 1
     fi
 else
-    echo "Error. This scrpit is intended for windows (mingw64)"
+    echo "Error. This script is intended for windows (mingw64)"
     exit 1
 fi

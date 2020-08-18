@@ -20,17 +20,21 @@ deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ bionic-backports main uni
 > /etc/apt/sources.list
 
 
-RUN apt-get update && apt-get install -y git
-RUN dpkg --add-architecture i386 && dpkg --add-architecture armhf && apt-get update
-RUN apt-get install -y build-essential gcc-multilib mingw-w64 wine64 wine32 qemu binfmt-support qemu-user-static
-RUN apt-get install -y crossbuild-essential-armhf libc6:armhf
-# buildbot and docker:
-RUN apt install -y \
-   python-dev \
-   python-pip
+RUN apt-get update && \
+        apt-get install -y git && \
+        dpkg --add-architecture i386 && \
+        dpkg --add-architecture armhf && \
+        apt-get update && \
+        apt-get install -y build-essential gcc-multilib mingw-w64 wine64 wine32 qemu binfmt-support qemu-user-static && \
+        apt-get install -y crossbuild-essential-armhf libc6:armhf && \
+        apt-get install -y python-dev python-pip
+
 RUN pip install buildbot-worker
-RUN groupadd -r buildbot && useradd -r -g buildbot buildbot
-RUN mkdir /worker && chown buildbot:buildbot /worker
+
+RUN groupadd -r buildbot && \
+        useradd -r -g buildbot buildbot && \
+        mkdir /worker && \
+        chown buildbot:buildbot /worker
 # Install your build-dependencies here ...
 USER buildbot
 WORKDIR /worker

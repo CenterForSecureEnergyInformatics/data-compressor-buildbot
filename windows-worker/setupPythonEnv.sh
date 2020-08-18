@@ -13,18 +13,29 @@ function isadmin()
 kernel="$(uname -s)"
 
 if [[ $kernel == MINGW64* ]]; then
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd -W )"
+
     if [[ $(isadmin) == admin ]]; then
         python -m venv sandbox
         source sandbox/Scripts/activate
         pip install --upgrade --trusted-host pypi.org pip incremental pywin32 buildbot[bundle] pyopenssl service_identity
         # this is why we ned to be admin:
         python sandbox/Scripts/pywin32_postinstall.py -install
-        #
+
         buildbot-worker create-worker . "${BUILDMASTER:?}" "${WINDOWS_NAME:?}" "${WINDOWS_PASS:?}"
-        echo "the only thing left for you to do is: get nssm and create a service which calls buildbot-worker-start.cmd"
-        echo "note: in the gui, specify the local user + password"
-        echo "note: after installation, the service does not run. You have to enable and start start it manually."
-        echo "note: once enabled, the service starts automatically on reboot"
+
+        # service setup:
+        # download and unzip nssm
+        curl https://nssm.cc/ci/nssm-2.24-101-g897c7ad.zip -o nssm.zip
+        archivepath=$(zipinfo -1 nssm.zip | grep exe | grep 64)
+        unzip -p nssm.zip $archivepath > nssm.exe
+
+        #install service
+        ./nssm.exe install $servicename $DIR/buildbot-worker-start.cmd
+
+        #modify username (keep ".\\"!) and password
+        ./nssm.exe set $servicename ObjectName '.\\invalid-username' 'invalid-password'
+        ./nssm.exe start $servicename
     else
         echo "you need to run this terminal as administrator"
         exit 1

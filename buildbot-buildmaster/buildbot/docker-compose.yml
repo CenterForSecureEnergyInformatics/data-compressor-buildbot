@@ -21,11 +21,13 @@ services:
     volumes:
         - ./secrets/:/var/lib/buildbot/secrets
         - ./master.cfg:/var/lib/buildbot/master.cfg
+        - ../traefik/dump/mendel.fh-salzburg.ac.at/:/var/lib/buildbot/certificate.pem:ro
+        - ../traefik/dump/mendel.fh-salzburg.ac.at/:/var/lib/buildbot/privateky.pem:ro
     networks:
       - proxy
       - buildbot
     ports:
-      - 10.10.41.44:9988:9989
+      - <Windows-Subnet-IP>:9989:9989
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
@@ -49,6 +51,7 @@ services:
       - "traefik.tcp.routers.buildbot.tls=true"
 
       - "traefik.tcp.services.buildbot.loadbalancer.server.port=9989"
+      - "traefik.tcp.services.buildbot.loadbalancer.terminationDelay=42"
   db:
     env_file:
       - db.env

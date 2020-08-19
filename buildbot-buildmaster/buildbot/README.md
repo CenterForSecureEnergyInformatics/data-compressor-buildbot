@@ -91,7 +91,12 @@ If you are unhappy with this location, you can specify another one in docker-com
 To do so, modify the volume of the service "db" accordingly.
 
 #### WEB URL
-If you aren't running this service under mendel.fh-salzburg.ac.at, you have to specify a different URL in docker-compose.yml.
-You'll find this option in the labels of the service buildbot-buildmaster
+If you aren't running this service under `mendel.fh-salzburg.ac.at`, you have to replace all occurences in [docker-compose.yml](docker-compose.yml) with a different URL.
+You'll find them in the labels of the service buildbot-buildmaster.
+### Subnet for non-TLS communication
+Windows workers currently cannot connect to the buildmaster via TLS.
+For this reason, the VM hosting the buildmaster and the Windows 10 VM running the worker share a subnet to ensure secure communication.
+You have to provide the IP of the Subnet in [docker-compose.yml](docker-compose.yml).
+To do so, replace `<Windows-Subnet-IP>` with your the server's IP in that subnet.
 ### db.env
 Specify a database password.

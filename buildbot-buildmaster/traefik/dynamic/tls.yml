@@ -9,9 +9,6 @@ http:
           Strict-Transport-Security: "max-age=63072000"
         stsPreload: true
 tls:
-  certificates:
-    - certFile: /etc/traefik/certs/mendel_fh-salzburg_ac_at.crt
-      keyFile: /etc/traefik/certs/mendel_fh-salzburg_ac_at.key
   options:
     default:
       minVersion:  "VersionTLS12"

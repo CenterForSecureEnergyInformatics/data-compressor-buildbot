@@ -11,6 +11,21 @@ services:
       CONTAINERS: 1
     networks:
       - socketproxy
+  cert-dumper:
+    image: ldez/traefik-certs-dumper:v2.7.0
+    restart: unless-stopped
+    container_name: cert-dumper
+    # add the following to your ~/.bashrc:
+    # export COMPOSE_UID=$(id -u)
+    # export COMPOSE_GID=$(id -g)
+    # OR add IDs directly to .env
+    user: ${COMPOSE_UID:?Please export COMPOSE_UID; see comments in docker-compose.yml}:${COMPOSE_GID:?Please export COMPOSE_UID; see comments in docker-compose.yml}
+    working_dir: $HOME
+    entrypoint: "/usr/bin/traefik-certs-dumper file --source $HOME/acme.json --dest $HOME/dump --domain-subdir --crt-ext=.pem --key-ext=.pem --version v2 --watch"
+    network_mode: "none"
+    volumes:
+      - ./acme.json:$HOME/acme.json:ro
+      - ./dump:$HOME/dump
 
   traefik:
     image: traefik:v2.0
@@ -29,7 +44,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./traefik.yml:/traefik.yml:ro
       - ./dynamic/:/etc/traefik/conf/:ro
-      - ./certs/:/etc/traefik/certs:ro
+      - ./acme.json:/acme.json
 networks:
   socketproxy:
     external: true

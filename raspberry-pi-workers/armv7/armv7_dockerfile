@@ -1,0 +1,10 @@
+FROM arm32v7/bash
+
+RUN apk add --update --no-cache libc-dev gcc openssh git file grep py3-setuptools python3-dev libffi libffi-dev openssl openssl-dev vim
+RUN pip3 install --upgrade pip buildbot-worker pyopenssl service_identity
+RUN addgroup -S buildbot && adduser -S buildbot -G buildbot
+RUN mkdir /worker && chown buildbot:buildbot /worker
+RUN apk add --update --no-cache make g++
+USER buildbot
+WORKDIR /worker
+ENTRYPOINT buildbot-worker create-worker --maxdelay=30 --maxretries=999 --keepalive=60 --use-tls . $BUILDMASTER $ARMV7_NAME $ARMV7_PASS && unset BUILDMASTER ARMV7_NAME ARMV7_PASS BUILDMASTER_PORT && buildbot-worker start --nodaemon

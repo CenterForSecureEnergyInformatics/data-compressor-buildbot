@@ -1,0 +1,10 @@
+version: '3'
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: armv6_dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./armv6.env
+      - ../buildmaster.env

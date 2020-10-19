@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: socket-proxy
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      CONTAINERS: 1
+    networks:
+      - socketproxy
+  cert-dumper:
+    image: ldez/traefik-certs-dumper:v2.7.0
+    restart: unless-stopped
+    container_name: cert-dumper
+    # add the following to your ~/.bashrc:
+    # export COMPOSE_UID=$(id -u)
+    # export COMPOSE_GID=$(id -g)
+    # OR add IDs directly to .env
+    user: ${COMPOSE_UID:?Please export COMPOSE_UID; see comments in docker-compose.yml}:${COMPOSE_GID:?Please export COMPOSE_UID; see comments in docker-compose.yml}
+    working_dir: $HOME
+    entrypoint: "/usr/bin/traefik-certs-dumper file --source $HOME/acme.json --dest $HOME/dump --domain-subdir --crt-ext=.pem --key-ext=.pem --version v2 --watch"
+    network_mode: "none"
+    volumes:
+      - ./acme.json:$HOME/acme.json:ro
+      - ./dump:$HOME/dump
+
+  traefik:
+    image: traefik:v2.0
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+      - socketproxy
+    ports:
+      - 80:80
+      - 443:443
+      - 9989:9989
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./traefik.yml:/traefik.yml:ro
+      - ./dynamic/:/etc/traefik/conf/:ro
+      - ./acme.json:/acme.json
+networks:
+  socketproxy:
+    external: true
+  proxy:
+    external: true

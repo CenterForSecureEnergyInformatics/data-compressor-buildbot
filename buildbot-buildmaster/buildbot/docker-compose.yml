@@ -51,7 +51,6 @@ services:
       - "traefik.tcp.routers.buildbot.tls=true"
 
       - "traefik.tcp.services.buildbot.loadbalancer.server.port=9989"
-      - "traefik.tcp.services.buildbot.loadbalancer.terminationDelay=42"
   db:
     env_file:
       - db.env
